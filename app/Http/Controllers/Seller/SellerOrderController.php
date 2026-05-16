@@ -110,10 +110,10 @@ class SellerOrderController extends Controller
             ], 422);
         }
 
-        if ($validated['status'] === 'cancelled' && in_array($item->status, ['shipped', 'delivered'])) {
+        if ($validated['status'] === 'cancelled' && $item->status !== 'pending') {
             return response()->json([
                 'message' => 'Cannot cancel item.',
-                'error' => 'Shipped or delivered items cannot be cancelled.',
+                'error' => 'Only order placed items can be cancelled.',
             ], 422);
         }
 
@@ -173,10 +173,10 @@ class SellerOrderController extends Controller
         $store = $this->sellerStore($request);
         $item = $this->sellerItem($itemId, $store->id, ['product.store']);
 
-        if (in_array($item->status, ['cancelled', 'shipped', 'delivered'])) {
+        if ($item->status !== 'pending') {
             return response()->json([
                 'message' => 'Cannot cancel item.',
-                'error' => "This item cannot be cancelled once it is {$item->status}.",
+                'error' => 'Only order placed items can be cancelled.',
             ], 422);
         }
 

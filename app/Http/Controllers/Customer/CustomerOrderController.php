@@ -185,10 +185,10 @@ class CustomerOrderController extends Controller
 
         $item = $this->customerItem($request, (int) $itemId);
 
-        if (!in_array($item->status, ['pending', 'processing'])) {
+        if ($item->status !== 'pending') {
             return response()->json([
                 'message' => 'Cannot cancel item.',
-                'error' => "This item cannot be cancelled once it is {$item->status}.",
+                'error' => 'Only order placed items can be cancelled.',
             ], 422);
         }
 
